@@ -1,40 +1,58 @@
-from pathlib import Path
 
-from recipe_analysis import (
-    load_data,
+import unittest
+import pandas as pd
+
+from src.recipe_analysis import (
     calculate_recipe_stats,
     calculate_bayesian_rating
 )
 
 
-# Get the main project folder
-project_path = Path(__file__).resolve().parent.parent
+class TestRecipeAnalysis(unittest.TestCase):
 
-# Dataset paths
-recipes_path = project_path / "data" / "raw" / "RAW_recipes.csv"
-interactions_path = project_path / "data" / "raw" / "RAW_interactions.csv"
+    def setUp(self):
+        self.interactions = pd.DataFrame({
+            "recipe_id": [1, 1, 1, 2, 2, 3],
+            "rating": [5, 4, 3, 5, 0, 2]
+        })
+
+    def test_calculate_recipe_stats(self):
+        result = calculate_recipe_stats(self.interactions)
+
+        self.assertEqual(len(result), 3)
+
+        recipe_1 = result[result["recipe_id"] == 1].iloc[0]
+
+        self.assertEqual(recipe_1["average_rating"], 4)
+        self.assertEqual(recipe_1["median_rating"], 4)
+        self.assertEqual(recipe_1["rating_count"], 3)
+
+    def test_zero_ratings_are_excluded(self):
+        result = calculate_recipe_stats(self.interactions)
+
+        recipe_2 = result[result["recipe_id"] == 2].iloc[0]
+
+        self.assertEqual(recipe_2["rating_count"], 1)
+        self.assertEqual(recipe_2["average_rating"], 5)
+
+    def test_calculate_bayesian_rating(self):
+        recipe_stats = pd.DataFrame({
+            "recipe_id": [1],
+            "average_rating": [4.0],
+            "rating_count": [10]
+        })
+
+        result = calculate_bayesian_rating(
+            recipe_stats,
+            overall_mean=3.5,
+            m=10
+        )
+
+        self.assertAlmostEqual(
+            result.loc[0, "bayesian_rating"],
+            3.75
+        )
 
 
-# Load datasets
-recipes, interactions = load_data(recipes_path, interactions_path)
-
-if recipes is not None and interactions is not None:
-
-    # Calculate overall average rating
-    overall_mean = interactions.loc[
-        interactions["rating"] > 0, "rating"
-    ].mean()
-
-    # Calculate recipe statistics
-    recipe_stats = calculate_recipe_stats(interactions)
-
-    # Calculate Bayesian ratings
-    recipe_stats = calculate_bayesian_rating(
-        recipe_stats, overall_mean
-    )
-
-    print("Datasets loaded successfully!")
-    print("\nRecipe statistics:")
-    print(recipe_stats.head())
-
-    print("\nTotal recipes:", len(recipe_stats))
+if __name__ == "__main__":
+    unittest.main()
