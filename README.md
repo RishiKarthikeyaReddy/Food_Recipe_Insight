@@ -61,7 +61,7 @@ The CSV files are stored in `data/raw/` and tracked using Git LFS.
 1. Clone the repository:
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone https://github.com/RishiKarthikeyaReddy/Food_Recipe_Insight.git
 cd Food-Recipe-Insight
 ```
 
