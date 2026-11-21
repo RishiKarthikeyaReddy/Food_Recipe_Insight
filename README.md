@@ -1,24 +1,30 @@
 # Food Recipe Insight
 
 ## Project Overview
-Food Recipe Insight is a Python-based data science project that analyzes Food.com recipe and user interaction data. It ranks recipes using three different rating methods and presents the results through an interactive Streamlit dashboard.
+
+Food Recipe Insight is a Python-based data science project that analyzes Food.com recipe and user interaction datasets. The project evaluates recipe ratings using three statistical methods and generates recipe rankings through an interactive Streamlit dashboard.
 
 ## Objectives
-- Explore and understand recipe and rating data.
+
+- Explore and understand recipe and user rating data.
 - Perform data cleaning and statistical analysis.
-- Compare different recipe-ranking methods.
-- Visualize recipe ratings and rankings.
-- Build an interactive dashboard for exploring recipes.
+- Implement and compare different recipe-ranking methods.
+- Analyze user ratings and recipe popularity.
+- Visualize recipe rankings and rating distributions.
+- Develop an interactive dashboard using Streamlit.
 
 ## Ranking Methods
-1. **Average Rating:** Calculates the mean user rating for each recipe.
-2. **Median Rating:** Calculates the middle user rating for each recipe.
-3. **Bayesian Weighted Rating:** Combines a recipe's average rating and number of ratings to produce a more reliable ranking.
+
+1. **Average Rating:** Calculates the arithmetic mean of user ratings for each recipe.
+2. **Median Rating:** Calculates the middle value of user ratings, reducing the influence of unusually high or low ratings.
+3. **Bayesian Weighted Rating:** Combines the average rating, number of user ratings, and overall dataset average to generate a more reliable ranking.
+
+The Bayesian method helps prevent recipes with very few ratings from dominating the rankings.
 
 ## Project Structure
 
 ```text
-Food-Recipe-Insight/
+Food_Recipe_Insight/
 ├── app/
 │   └── streamlit_app.py
 ├── data/
@@ -30,6 +36,7 @@ Food-Recipe-Insight/
 ├── outputs/
 │   ├── figures/
 │   └── rankings/
+│       └── recipe_rankings.csv
 ├── src/
 │   ├── __init__.py
 │   ├── recipe_analysis.py
@@ -41,6 +48,7 @@ Food-Recipe-Insight/
 ```
 
 ## Technologies and Libraries
+
 - Python
 - Pandas
 - NumPy
@@ -50,34 +58,36 @@ Food-Recipe-Insight/
 - Git and Git LFS
 
 ## Dataset
-The project uses Food.com recipe and interaction datasets:
-- `RAW_recipes.csv`
-- `RAW_interactions.csv`
 
-The CSV files are stored in `data/raw/` and tracked using Git LFS.
+This project uses two datasets from Food.com:
+
+- `RAW_recipes.csv` – Contains recipe information.
+- `RAW_interactions.csv` – Contains user ratings and reviews.
+
+The datasets are stored in `data/raw/` and tracked using Git Large File Storage (Git LFS).
 
 ## Installation and Setup
 
-1. Clone the repository:
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/RishiKarthikeyaReddy/Food_Recipe_Insight.git
-cd Food-Recipe-Insight
+cd Food_Recipe_Insight
 ```
 
-2. Create a virtual environment:
+### 2. Create a virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-3. Activate the environment on Windows:
+### 3. Activate the environment (Windows)
 
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
 
-4. Install dependencies:
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -85,11 +95,43 @@ pip install -r requirements.txt
 
 ## Run the Dashboard
 
+Start the Streamlit application using:
+
 ```bash
 python -m streamlit run app/streamlit_app.py
 ```
 
-The dashboard allows users to explore recipe rankings using Average Rating, Median Rating, and Bayesian Weighted Rating.
+The interactive dashboard allows users to explore recipe rankings based on Average Rating, Median Rating, and Bayesian Weighted Rating.
+
+## Outputs and Validation
+
+The project generates a recipe rankings CSV file:
+
+`outputs/rankings/recipe_rankings.csv`
+
+The output contains:
+
+- Recipe ID
+- Average Rating
+- Median Rating
+- Rating Count
+- Rating Standard Deviation
+- Bayesian Rating
+- Average Rank
+- Bayesian Rank
+
+The generated rankings were validated for sorting order, missing values, and duplicate recipe IDs.
+
+## Testing
+
+The project includes a test module:
+
+`src/test_recipe_analysis.py`
+
+It is used to validate the recipe analysis functionality.
 
 ## Author
-Developed as a data science project using Python.
+
+**Rishi Karthikeya Reddy**
+
+Data Science Project | Python | Data Analysis | Statistical Ranking
