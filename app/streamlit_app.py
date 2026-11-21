@@ -12,17 +12,21 @@ from src.recipe_analysis import (
 
 # Page configuration
 st.set_page_config(
-    page_title="Food Recipe Ranking",
+    page_title="Food Recipe Insight",
     page_icon="🍽️",
     layout="wide"
 )
 
 # Project title
-st.title("🍽️ Food Recipe Ranking Dashboard")
-
+st.title("🍽️ Food Recipe Insight")
+st.subheader("Recipe Analysis and Intelligent Ranking System")
 st.write(
-    "This application ranks Food.com recipes using user ratings "
-    "and a Bayesian weighted rating."
+    "Food Recipe Insight is an interactive data science application "
+    "that explores Food.com recipe and user interaction data. "
+    "It analyzes recipe ratings using Average Rating, Median Rating, "
+    "and Bayesian Weighted Rating to generate meaningful recipe rankings. "
+    "Users can explore recipe insights, compare ranking methods, "
+    "and discover highly rated recipes through interactive visualizations."
 )
 
 # Load datasets
