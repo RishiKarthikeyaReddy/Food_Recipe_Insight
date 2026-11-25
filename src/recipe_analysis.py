@@ -73,3 +73,36 @@ def calculate_bayesian_rating(recipe_stats, overall_mean, m=10):
     )
 
     return recipe_stats
+
+
+def save_processed_data(recipe_stats, recipes, output_path):
+    """
+    Save processed recipe statistics with recipe names.
+    """
+    processed_data = recipe_stats.merge(
+        recipes[["id", "name"]],
+        left_on="recipe_id",
+        right_on="id",
+        how="left"
+    )
+
+    processed_data = processed_data[
+        [
+            "recipe_id",
+            "name",
+            "average_rating",
+            "median_rating",
+            "rating_count",
+            "rating_std",
+            "bayesian_rating"
+        ]
+    ]
+
+    processed_data = processed_data.rename(
+        columns={"name": "recipe_name"}
+    )
+
+    processed_data.to_csv(output_path, index=False)
+
+    return processed_data
+

@@ -7,7 +7,8 @@ import ast
 from src.recipe_analysis import (
     load_data,
     calculate_recipe_stats,
-    calculate_bayesian_rating
+    calculate_bayesian_rating,
+    save_processed_data
 )
 
 # Page configuration
@@ -16,6 +17,13 @@ st.set_page_config(
     page_icon="🍽️",
     layout="wide"
 )
+
+# Load external CSS file
+with open("Assets/style.css") as css_file:
+    st.markdown(
+        f"<style>{css_file.read()}</style>",
+        unsafe_allow_html=True
+    )
 
 # Project title
 st.title("🍽️ Food Recipe Insight")
@@ -66,6 +74,15 @@ try:
     filtered_recipes = calculate_bayesian_rating(
         filtered_recipes,
         overall_mean
+    )
+
+    # Save processed recipe data
+    processed_path = "data/processed/processed_recipe_data.csv"
+
+    save_processed_data(
+        filtered_recipes,
+        recipes,
+        processed_path
     )
 
     # Rating distribution
@@ -205,6 +222,10 @@ try:
         "Choose a ranking method:",
         ["Average Rating", "Median Rating", "Bayesian Rating"]
     )
+    ranking_limit = st.selectbox(
+    "How many recipes do you want to see?",
+    [10, 20]
+    )
 
     # Select ranking method
     if ranking_method == "Average Rating":
@@ -216,11 +237,11 @@ try:
     else:
         ranking_column = "bayesian_rating"
 
-    # Get top 10 recipes
+    # Get top recipes based on selected limit
     top_recipes = filtered_recipes.sort_values(
         ranking_column,
         ascending=False
-    ).head(10)
+        ).head(ranking_limit)
 
     # Add recipe names
     top_recipes = top_recipes.merge(
@@ -237,7 +258,7 @@ try:
     ]
 
     # Display ranking table
-    st.subheader(f"Top 10 Recipes by {ranking_method}")
+    st.subheader(f"Top {ranking_limit} Recipes by {ranking_method}")
 
     st.dataframe(
         top_recipes,
@@ -271,12 +292,223 @@ try:
     ax.set_xlabel(ranking_method)
     ax.set_xlim(4, 5.1)
     ax.set_ylabel("Recipe ID")
-    ax.set_title(f"Top 10 Recipes by {ranking_method}")
+    ax.set_title(f"Top {ranking_limit} Recipes by {ranking_method}")
     ax.set_xlim(4, 5.1)
 
     plt.tight_layout()
     st.pyplot(fig)
     plt.close(fig)
+
+    # Ranking Comparison
+    st.header("📊 Ranking Method Comparison")
+
+    st.write(
+    "Compare how different ranking methods evaluate recipes "
+    "and identify differences in their rankings."
+    )
+
+        # Calculate rankings for each method
+    average_ranking = filtered_recipes.sort_values(
+        ["average_rating", "rating_count"],
+        ascending=[False, False]
+    ).copy()
+
+    median_ranking = filtered_recipes.sort_values(
+        ["median_rating", "average_rating", "rating_count"],
+        ascending=[False, False, False]
+    ).copy()
+
+    bayesian_ranking = filtered_recipes.sort_values(
+        "bayesian_rating",
+        ascending=False
+    ).copy()
+
+        # Add ranking positions
+    average_ranking["average_rank"] = range(
+        1, len(average_ranking) + 1
+    )
+
+    median_ranking["median_rank"] = range(
+        1, len(median_ranking) + 1
+    )
+
+    bayesian_ranking["bayesian_rank"] = range(
+        1, len(bayesian_ranking) + 1
+    )
+
+        # Combine all ranking results
+    ranking_comparison = average_ranking[
+        ["recipe_id", "average_rating", "average_rank"]
+    ].merge(
+        median_ranking[
+            ["recipe_id", "median_rating", "median_rank"]
+        ],
+        on="recipe_id"
+    ).merge(
+        bayesian_ranking[
+            ["recipe_id", "bayesian_rating", "bayesian_rank"]
+        ],
+        on="recipe_id"
+    )
+
+            # Select comparison size
+    comparison_limit = st.selectbox(
+        "Choose comparison size:",
+        [10, 20]
+    )
+
+    # Display ranking comparison
+    st.subheader(
+        f"Top {comparison_limit} Recipes: Ranking Comparison"
+    )
+
+    comparison_results = ranking_comparison.sort_values(
+        "bayesian_rank",
+        ascending=True
+    ).head(comparison_limit)
+
+    # Add recipe names
+    comparison_results = comparison_results.merge(
+        recipes[["id", "name"]],
+        left_on="recipe_id",
+        right_on="id",
+        how="left"
+    )
+
+    # Select columns for display
+    comparison_results = comparison_results[
+        [
+            "recipe_id",
+            "name",
+            "average_rating",
+            "average_rank",
+            "median_rating",
+            "median_rank",
+            "bayesian_rating",
+            "bayesian_rank"
+        ]
+    ]
+
+    # Display comparison table
+    st.dataframe(
+        comparison_results,
+        width="stretch"
+    )
+
+            # Find common recipes in selected Top N rankings
+    average_top = set(
+        average_ranking.head(comparison_limit)["recipe_id"]
+    )
+
+    median_top = set(
+        median_ranking.head(comparison_limit)["recipe_id"]
+    )
+
+    bayesian_top = set(
+        bayesian_ranking.head(comparison_limit)["recipe_id"]
+    )
+
+    common_recipes = (
+        average_top
+        & median_top
+        & bayesian_top
+    )
+
+    st.subheader(
+        f"Common Recipes Across All Three Top {comparison_limit} Rankings"
+    )
+
+    st.metric(
+        f"Recipes appearing in all three Top {comparison_limit} lists",
+        len(common_recipes)
+    )
+
+    # Compare overlap between each pair of ranking methods
+    common_average_median = average_top & median_top
+    common_average_bayesian = average_top & bayesian_top
+    common_median_bayesian = median_top & bayesian_top
+
+    st.subheader("Pairwise Ranking Comparison")
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric(
+        "Average vs Median",
+        len(common_average_median)
+    )
+
+    col2.metric(
+        "Average vs Bayesian",
+        len(common_average_bayesian)
+    )
+
+    col3.metric(
+        "Median vs Bayesian",
+        len(common_median_bayesian)
+    )
+
+        # Ranking Movement Analysis
+    st.subheader("Ranking Movement Analysis")
+
+    # Combine ranking positions
+    movement_analysis = average_ranking[
+        ["recipe_id", "average_rank"]
+    ].merge(
+        median_ranking[["recipe_id", "median_rank"]],
+        on="recipe_id"
+    ).merge(
+        bayesian_ranking[["recipe_id", "bayesian_rank"]],
+        on="recipe_id"
+    )
+
+    # Calculate ranking movement
+    movement_analysis["average_to_bayesian_change"] = (
+        movement_analysis["average_rank"]
+        - movement_analysis["bayesian_rank"]
+    )
+
+    movement_analysis["median_to_bayesian_change"] = (
+        movement_analysis["median_rank"]
+        - movement_analysis["bayesian_rank"]
+    )
+
+        # Add recipe names
+    movement_analysis = movement_analysis.merge(
+        recipes[["id", "name"]],
+        left_on="recipe_id",
+        right_on="id",
+        how="left"
+    )
+
+    movement_analysis = movement_analysis.rename(
+        columns={"name": "recipe_name"}
+    )
+
+    # Arrange columns and remove duplicate id
+    movement_analysis = movement_analysis[
+        [
+            "recipe_id",
+            "recipe_name",
+            "average_rank",
+            "median_rank",
+            "bayesian_rank",
+            "average_to_bayesian_change",
+            "median_to_bayesian_change"
+        ]
+    ]
+
+    st.write(
+        "Positive values indicate that a recipe ranks higher "
+        "in the Bayesian method than in the other method."
+    )
+
+    st.dataframe(
+        movement_analysis.sort_values(
+            "average_to_bayesian_change",
+            ascending=False
+        ).head(10).reset_index(drop=True),
+        width="stretch"
+    )
 
 except FileNotFoundError:
     st.error(

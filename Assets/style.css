@@ -1,0 +1,83 @@
+
+/* Main application background */
+.stApp {
+    background-color: #f5f5f5;
+}
+
+/* Main title and section headings */
+h1, h2, h3 {
+    color: darkgreen !important;
+    text-align: center;
+    font-size: 36px;
+}
+
+/* Normal text */
+p {
+    color: #333333;
+    font-size: 16px;
+}
+
+/* Metric cards */
+[data-testid="stMetric"] {
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #d6e4dc;
+    border-radius: 12px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Metric labels */
+[data-testid="stMetricLabel"] {
+    color: #276749;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Metric values */
+[data-testid="stMetricValue"] {
+    color: darkgreen !important;
+}
+
+/* Buttons */
+.stButton button {
+    background-color: darkgreen !important;
+    color: white;
+    border-radius: 5px;
+}
+
+/* Metric numbers */
+[data-testid="stMetricValue"] div {
+    color: darkgreen !important;
+}
+
+/* Search box */
+.stTextInput input {
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+/* Search box when selected */
+.stTextInput input:focus {
+    border: 2px solid darkgreen;
+}
+
+/* Ranking method dropdown */
+.stSelectbox div[data-baseweb="select"] {
+    background-color: white;
+    border-radius: 6px;
+}
+
+/* Dropdown text */
+.stSelectbox div[data-baseweb="select"] div {
+    color: #333333;
+}
+
+/* Recipe ranking tables */
+[data-testid="stDataFrame"] {
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    background-color: white;
+}
+
