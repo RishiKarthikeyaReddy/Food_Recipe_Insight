@@ -23,29 +23,50 @@ The Bayesian method helps prevent recipes with very few ratings from dominating 
 
 ## Project Structure
 
-```text
 Food_Recipe_Insight/
+│
 ├── app/
 │   └── streamlit_app.py
+│
+├── assets/
+│   └── style.css
+│
 ├── data/
-│   └── raw/
-│       ├── RAW_interactions.csv
-│       └── RAW_recipes.csv
+│   ├── raw/
+│   │   ├── RAW_recipes.csv
+│   │   └── RAW_interactions.csv
+│   │
+│   └── processed/
+│       └── processed_recipe_data.csv
+│
 ├── notebooks/
 │   └── 01_data_exploration.ipynb
+│
 ├── outputs/
 │   ├── figures/
 │   └── rankings/
 │       └── recipe_rankings.csv
+│
 ├── src/
 │   ├── __init__.py
 │   ├── recipe_analysis.py
 │   └── test_recipe_analysis.py
+│
 ├── .gitattributes
 ├── .gitignore
 ├── README.md
 └── requirements.txt
-```
+
+### Folder Description
+
+- `app/`: Contains the Streamlit dashboard application.
+- `assets/`: Contains CSS files for dashboard styling.
+- `data/raw/`: Contains the original Food.com datasets.
+- `data/processed/`: Contains cleaned and processed recipe data.
+- `notebooks/`: Contains exploratory data analysis.
+- `outputs/figures/`: Stores generated visualizations.
+- `outputs/rankings/`: Stores recipe ranking results.
+- `src/`: Contains data processing functions and unit tests.
 
 ## Technologies and Libraries
 
