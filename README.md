@@ -22,7 +22,7 @@ Food Recipe Insight is a Python-based data science project that analyzes Food.co
 The Bayesian method helps prevent recipes with very few ratings from dominating the rankings.
 
 ## Project Structure
-
+```text
 Food_Recipe_Insight/
 │
 ├── app/
@@ -56,7 +56,7 @@ Food_Recipe_Insight/
 ├── .gitignore
 ├── README.md
 └── requirements.txt
-
+```
 ### Folder Description
 
 - `app/`: Contains the Streamlit dashboard application.
@@ -153,6 +153,6 @@ It is used to validate the recipe analysis functionality.
 
 ## Author
 
-**Rishi Karthikeya Reddy**
+**Rishi Karthikeya Reddy Kavalakuntla**
 
 Data Science Project | Python | Data Analysis | Statistical Ranking
