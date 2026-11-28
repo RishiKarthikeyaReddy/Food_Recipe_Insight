@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Food Recipe Insight is a Python-based data science project that analyzes Food.com recipe and user interaction datasets. The project evaluates recipe ratings using three statistical methods and generates recipe rankings through an interactive Streamlit dashboard.
+Food Recipe Insight is a Python-based data science project that analyzes the Food.com Recipes and User Interactions datasets. The project evaluates and ranks recipes using three methods: Average Rating, Median Rating, and Bayesian Weighted Rating. It aims to provide more reliable recipe rankings by considering both user ratings and the number of ratings received by each recipe. The results are presented through an interactive Streamlit dashboard.
 
 ## Objectives
 
@@ -21,7 +21,10 @@ Food Recipe Insight is a Python-based data science project that analyzes Food.co
 
 The Bayesian method helps prevent recipes with very few ratings from dominating the rankings.
 
+For the final rankings, only recipes with at least 10 user ratings are considered. This helps reduce the influence of recipes with very limited rating data.
+
 ## Project Structure
+
 ```text
 Food_Recipe_Insight/
 │
@@ -57,6 +60,7 @@ Food_Recipe_Insight/
 ├── README.md
 └── requirements.txt
 ```
+
 ### Folder Description
 
 - `app/`: Contains the Streamlit dashboard application.
@@ -159,6 +163,7 @@ Run the tests from the project root directory using:
 
 ```bash
 python -m pytest src/test_recipe_analysis.py -v
+```
 
 ## Author
 
