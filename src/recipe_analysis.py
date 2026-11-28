@@ -25,8 +25,15 @@ def load_data(recipes_path, interactions_path):
 
 def calculate_recipe_stats(interactions):
     """
-    Calculate average rating, median rating,
-    rating count, and standard deviation for each recipe.
+    Calculate rating statistics for each recipe.
+
+    Parameters:
+        interactions: DataFrame containing user interactions
+                      and recipe ratings.
+
+    Returns:
+        DataFrame containing recipe ID, average rating,
+        median rating, rating count, and rating standard deviation.
     """
     rated_interactions = interactions[
         interactions["rating"] > 0
@@ -77,7 +84,15 @@ def calculate_bayesian_rating(recipe_stats, overall_mean, m=10):
 
 def save_processed_data(recipe_stats, recipes, output_path):
     """
-    Save processed recipe statistics with recipe names.
+    Merge recipe statistics with recipe names and save the data.
+
+    Parameters:
+        recipe_stats: DataFrame containing calculated recipe statistics.
+        recipes: DataFrame containing recipe IDs and names.
+        output_path: File path where the processed CSV will be saved.
+
+    Returns:
+        DataFrame containing processed recipe information and statistics.
     """
     processed_data = recipe_stats.merge(
         recipes[["id", "name"]],

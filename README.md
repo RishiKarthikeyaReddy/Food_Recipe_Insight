@@ -87,6 +87,10 @@ This project uses two datasets from Food.com:
 
 The datasets are stored in `data/raw/` and tracked using Git Large File Storage (Git LFS).
 
+The dataset is publicly available on Kaggle:
+
+[Food.com Recipes and Interactions Dataset](https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions)
+
 ## Installation and Setup
 
 ### 1. Clone the repository
@@ -141,7 +145,7 @@ The output contains:
 - Average Rank
 - Bayesian Rank
 
-The generated rankings were validated for sorting order, missing values, and duplicate recipe IDs.
+The generated rankings were reviewed to ensure that the recipe statistics and ranking results were produced correctly.
 
 ## Testing
 
@@ -150,6 +154,11 @@ The project includes a test module:
 `src/test_recipe_analysis.py`
 
 It is used to validate the recipe analysis functionality.
+
+Run the tests from the project root directory using:
+
+```bash
+python -m pytest src/test_recipe_analysis.py -v
 
 ## Author
 
