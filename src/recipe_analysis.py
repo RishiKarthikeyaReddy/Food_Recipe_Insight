@@ -63,7 +63,7 @@ def calculate_bayesian_rating(recipe_stats, overall_mean, m=10):
     Parameters:
         recipe_stats: DataFrame containing average ratings and rating counts.
         overall_mean: Overall average rating across all rated interactions.
-        m: Minimum rating-count weighting parameter.
+        m: Smoothing parameter controlling the influence of the overall mean.
 
     Returns:
         DataFrame containing Bayesian weighted ratings.
